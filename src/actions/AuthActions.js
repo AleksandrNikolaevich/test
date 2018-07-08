@@ -6,7 +6,7 @@ const accessTokenKey = 'access_token_key';//ключ по которому мы 
 
 //далее иду ключи экшенов, по ним редюсеры понимаю как надо изменить глобальный стейт
 //смотри файл reducers/AuthReducer.js
-export const CHECK_TOKEN = "CHECK_TOKEN";
+export const SET_TOKEN = "SET_TOKEN";
 export const TOGGLE_PROCESS = "TOGGLE_PROCESS";
 
 const toggleProcess = (state)=> {
@@ -26,7 +26,7 @@ export default {
             const accessToken = await AsyncStorage.getItem(accessTokenKey);
             if(accessToken){
                 dispatch({
-                    type: CHECK_TOKEN,
+                    type: SET_TOKEN,
                     accessToken
                 });
                 dispatch(toggleProcess(false));
@@ -35,6 +35,47 @@ export default {
             dispatch(toggleProcess(false));
             return false;
 
+        }
+    },
+    // пример авторизации
+    logIn(login, password){
+        return async (dispatch, getState)=>{
+            dispatch(toggleProcess(true));
+
+            const token = "sdfnm3234m,iy23g4j";
+
+            try {
+                let response = await fetch(
+                    'https://example.com/login',
+                    {
+                        method: 'POST',
+                        headers: {
+                           /* Accept: 'application/json',
+                            'Content-Type': 'application/json',*/
+                             Authorization: `Bearer ${token}`
+
+                        },
+                        body: JSON.stringify({
+                            login: login,
+                            password: password,
+                        }),
+                    }
+                );
+                let responseJson = await response.json();
+
+                if(responseJson.access_token){
+                    await AsyncStorage.setItem(accessTokenKey, responseJson.access_token);
+                    dispatch({
+                        type: SET_TOKEN,
+                        accessToken: responseJson.access_token
+                    });
+                    return null;
+                }
+                return responseJson.msg;
+            } catch (error) {
+                dispatch(toggleProcess(false));
+                console.error(error);
+            }
         }
     }
 }

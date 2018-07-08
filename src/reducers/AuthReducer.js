@@ -2,7 +2,7 @@
 потом все части объеденяются в один большой глобальный стейт в файле reducers/index.js
 редюсеры разбиваются по функциональному назначению, данный редюсер отвечает за авторизацию*/
 
-import {CHECK_TOKEN, TOGGLE_PROCESS} from "../actions/AuthActions";//импортируем типы экшенов
+import {SET_TOKEN, TOGGLE_PROCESS} from "../actions/AuthActions";//импортируем типы экшенов
 
 //начальное состояние для этого редюсера
 const initialState = {
@@ -18,7 +18,7 @@ const authReducer = (state = initialState, action) => {
             // конструкция аналогичная newState = Object.assign({}, state, {loading: action.state});
             newState = {...state, loading: action.state };
             break;
-        case CHECK_TOKEN:
+        case SET_TOKEN:
             newState = {...state, accessToken: action.accessToken };
             break;
     }

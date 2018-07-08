@@ -32,6 +32,17 @@ class Auth extends React.PureComponent{
         }
     }
 
+    async login(login, password){
+        const result = await this.props.logIn(login, password);
+        if(result){
+            //выводим сообщение об ошибке
+            alert(result);
+        }else{
+            //авторизация прошла успешно
+            this.props.navigation.navigate('Main');
+        }
+    }
+
     render(){
         const {
             auth
